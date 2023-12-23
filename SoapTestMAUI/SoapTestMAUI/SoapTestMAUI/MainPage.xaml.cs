@@ -1,4 +1,6 @@
-﻿namespace SoapTestMAUI;
+﻿using ServiceReference;
+
+namespace SoapTestMAUI;
 
 public partial class MainPage : ContentPage
 {
@@ -9,14 +11,17 @@ public partial class MainPage : ContentPage
 		InitializeComponent();
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
+	private async void OnCounterClicked(object sender, EventArgs e)
 	{
-		count++;
+        var client = new WebServiceSoapClient(WebServiceSoapClient.EndpointConfiguration.WebServiceSoap);
+		var response = await client.HelloWorldAsync();
+
+        count++;
 
 		if (count == 1)
 			CounterBtn.Text = $"Clicked {count} time";
 		else
-			CounterBtn.Text = $"Clicked {count} times";
+			CounterBtn.Text = $"Clicked {count} times" + response.Body.HelloWorldResult;
 
 		SemanticScreenReader.Announce(CounterBtn.Text);
 	}
